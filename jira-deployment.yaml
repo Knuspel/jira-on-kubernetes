@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -6,6 +6,9 @@ metadata:
   name: jira
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: jira
   template:
     metadata:
       labels:
@@ -14,16 +17,58 @@ spec:
     spec:
       containers:
         - name: jira
-          image: "gcr.io/hightowerlabs/jira:7.3.6-standalone"
+          image: "atlassian/jira-software"
           resources:
             requests:
               cpu: "2"
               memory: "2G"
           volumeMounts:
-            - name: "jira-home"
-              mountPath: /opt/jira-home
+            - name: "jira-home1"
+              mountPath: /var/atlassian/application-data/jira
+            - name: "jira-shared"
+              mountPath: /data/jira/sharedhome  
       volumes:
-        - name: "jira-home"
-          gcePersistentDisk:
-            pdName: jira-home
-            fsType: ext4
+        - name: "jira-home1"
+          hostPath:
+            path: /data/jira/home1
+        - name: "jira-shared"
+          hostPath:
+            path: /data/jira/sharedhome
+---      
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jira
+  name: jira_2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jira
+  template:
+    metadata:
+      labels:
+        app: jira
+      name: jira
+    spec:
+      containers:
+        - name: jira_2
+          image: "atlassian/jira-software"
+          resources:
+            requests:
+              cpu: "2"
+              memory: "2G"
+          volumeMounts:
+            - name: "jira-home2"
+              mountPath: /var/atlassian/application-data/jira
+            - name: "jira-shared"
+              mountPath: /data/jira/sharedhome  
+      volumes:
+        - name: "jira-home2"
+          hostPath:
+            path: /data/jira/home2
+        - name: "jira-shared"
+          hostPath:
+            path: /data/jira/sharedhome
+---      
