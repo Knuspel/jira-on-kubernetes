@@ -5,7 +5,7 @@ metadata:
     app: jira
   name: jira
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: jira
@@ -20,8 +20,8 @@ spec:
           image: "atlassian/jira-software"
           resources:
             requests:
-              cpu: "2"
-              memory: "2G"
+              cpu: "1"
+              memory: "1G"
           volumeMounts:
             - name: "jira-home1"
               mountPath: /var/atlassian/application-data/jira
@@ -39,26 +39,26 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: jira
-  name: jira_2
+    app: jira2
+  name: jira2
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: jira
+      app: jira2
   template:
     metadata:
       labels:
-        app: jira
-      name: jira
+        app: jira2
+      name: jira2
     spec:
       containers:
-        - name: jira_2
+        - name: jira2
           image: "atlassian/jira-software"
           resources:
             requests:
-              cpu: "2"
-              memory: "2G"
+              cpu: "1"
+              memory: "1G"
           volumeMounts:
             - name: "jira-home2"
               mountPath: /var/atlassian/application-data/jira
